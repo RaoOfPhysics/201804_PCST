@@ -1,0 +1,7 @@
+.Rhistory
+.rstudio
+.*~
+*swp
+.cache
+.bash_history
+kitematic/
