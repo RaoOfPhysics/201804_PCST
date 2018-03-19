@@ -1,0 +1,8 @@
+install.packages('tidyverse')
+install.packages('rmarkdown')
+install.packages('here')
+install.packages('revealjs')
+install.packages('kableExtra')
+install.packages('rcrossref')
+install.packages('rio')
+install.packages('tidytext')
