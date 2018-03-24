@@ -1,3 +1,4 @@
+.R/
 .Rhistory
 .rstudio
 .*~
@@ -5,3 +6,4 @@
 .cache
 .bash_history
 kitematic/
+.Rproj.user
