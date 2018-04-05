@@ -1,6 +1,6 @@
 # “Relevance-distance”: my talk for PCST 2018
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/RaoOfPhysics/201804_PCST/master)
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/RaoOfPhysics/201804_PCST/master?urlpath=rstudio)
 
 [![Achintya's PhD repos](https://img.shields.io/badge/collection-Achintya's%20PhD%20repos-yellowgreen.svg)](https://github.com/RaoOfPhysics/phd)
 
@@ -67,7 +67,9 @@ knitr takes the `index.Rmd` (R Markdown) file and through some wizardry produces
 
 ## Licence
 
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">Relevance-distance…</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/RaoOfPhysics/201804_PCST" property="cc:attributionName" rel="cc:attributionURL">Achintya Rao</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+- <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" /></a> The content of the talk itself is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA).
+- The code is not creative enough to merit a copyright statement and should be considered to be part of the public domain, since it builds upon the openly available work of several others.
+- The images available under the `images/` directory are &copy; CERN and are used here under the terms of the CERN licensing conditions (for information/education purposes).
 
 ## Acknowledgements
 
