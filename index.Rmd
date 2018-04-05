@@ -1,0 +1,540 @@
+---
+title: "Relevance-distance…"
+author: "Achintya Rao &middot; <a.r@cern.ch>"
+date: "5 April 2018"
+output: 
+    revealjs::revealjs_presentation:
+        theme: night
+        highlight: pygments
+        incremental: true
+        center: true
+        transition: slide
+        reveal_options:
+            slideNumber: true
+        fig_caption: true
+        includes:
+          in_header: header.html
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE) # , warning = FALSE)
+library(here) # Loaded to source the scripts below
+
+# Changes made to these scripts will change the analysis below
+# and the output of the presentation
+source(here("scripts", "00_journal_data.R"))
+source(here("scripts", "01_setup.R"))
+```
+
+# Conclusions
+
+##
+
+> "All sciences are equal, but some sciences are more equal than others."
+
+1. Participatory paradigms of science communication are driven by research into a small number of sciences.
+1. Sciences such as particle physics have limited scope for participatory paradigms.
+1. We should "unlump" sciences and tailor participation expectations to the relevance of the science to everyday human life.
+
+# `$ whoami`
+
+##
+
+> - **Science Communicator** at CERN
+>     - Sep 2010 &mdash; Feb 2018: Compact Muon Solenoid (CMS) Collaboration
+>     - Mar 2018 &mdash; present: Education, Communications and Outreach (ECO) Group, CERN
+> - **Doctoral Student** at UWE Science Communication Unit, Bristol
+>     - Jan 2014 &mdash; present
+> - ~~Philosopher / sociologist~~
+
+<br />
+<br />
+<small>
+Twitter: [\@RaoOfPhysics](https://twitter.com/RaoOfPhysics) | 
+Scholar.Social: [\@RaoOfPhysics](https://scholar.social/@RaoOfPhysics)<br />
+This presentation: [github.com/RaoOfPhysics/201804_PCST](https://github.com/RaoOfPhysics/201804_PCST)
+</small>
+
+# Part 1: The argument
+
+## "Science" is… 
+
+an all-encompasing term that includes (per the [OECD's _Frascati Manual_](http://dx.doi.org/10.1787/9789264239012-en) on R&D):
+
+## **Applied research**
+
+"directed primarily towards a specific, practical aim or objective"
+
+## **Basic research**
+
+"acquire new knowledge […] without any particular application"
+
+##
+
+While we are reminded not to think of a homogenous "public"
+
+##
+
+but many "public***s***"
+
+##
+
+we still see references to all sciences under one umbrella.
+
+## "Science" in…
+
+##
+
+… **science** communication…
+
+##
+
+… or public understanding of **science**…
+
+##
+
+… or public engagement with **science**…
+
+##
+
+… or public participation in **science**…
+
+## 
+
+… does not speak for all sciences…
+
+##
+
+… but seems to be more about…
+
+- risk,
+- controversies,
+- fears.
+
+##
+
+> "… what is called ‘science’ (or often its de-facto synonym, ‘risk’)…"
+
+> "… what is this object—‘science’? ‘risk’? ‘uncertainty’?…"
+
+<small>&mdash; Wynne (2007)</small>
+
+##
+
+> "… reactions to issues at the intersection of ‘science’ […] and ‘risk’…"
+
+<small>&mdash; _Report of the Expert Group on Science and Governance to the Science, Economy and Society Directorate, Directorate-General for Research_, European Commission (2007)</small>
+
+##
+
+No mention in EC report of:
+
+- physics
+- chemistry
+- geology
+- …
+
+# Biases (?) in our literature
+
+##
+
+```{r pus-bigram, dev='svg', fig.cap='Public Understanding of Science (journal)'}
+pus_bigram <- pus_data %>%
+  unnest_tokens(bigram, title, token = "ngrams", n = 2) %>%
+  separate(bigram, c("word1", "word2"), sep = " ") %>%
+  filter(!word1 %in% stop_words$word) %>%
+  filter(!word2 %in% stop_words$word) %>%
+  unite(bigram, word1, word2, sep = " ") %>%
+  count(bigram, sort = T) %>%
+  filter(n > 3) %>%
+  mutate(bigram = reorder(bigram, n)) %>%
+  mutate(highlight = ifelse(bigram %in% highlight_bigram, "yes", "no"))
+
+pus_bigram %>%
+  ggplot(aes(bigram, n, fill = highlight)) +
+  geom_col() +
+  scale_fill_manual(
+    values = c("yes" = "blue", "no" = "grey"),
+    guide = FALSE
+  ) +
+  ggtitle("Public Understanding of Science", subtitle = "bigrams") +
+  theme(axis.text.y = element_text(
+    colour =
+      ifelse(levels(pus_bigram$bigram) %in%
+        highlight_bigram, "blue", "grey")
+  )) +
+  xlab(NULL) +
+  ylab("Number of occurances (> 3)") +
+  coord_flip()
+```
+
+# Part 2: The study
+
+## {data-background="images/1205187_03-A4-at-144-dpi.jpg"}
+
+## [CERN](http://home.cern)
+
+The European Laboratory for Particle Physics
+
+- Geneva, Switzerland
+- host laboratory for international collaborations
+- ~half of the world's 20,000 particle physicists
+
+## {data-background="images/0910152_02-A4-at-144-dpi.jpg"}
+
+## {data-background="images/0807031_01-A4-at-144-dpi.jpg"}
+
+## {data-background="images/IMG_9286.JPG"}
+
+## The CMS Collaboration
+
+[**C**ompact **M**uon **S**olenoid](http://cms.web.cern.ch)
+
+- one of the two teams that [discovered the Higgs boson in 2012](http://cms.web.cern.ch/news/observation-new-particle-mass-125-gev)
+- people (June 2015)
+    - over 4000 physicists, engineers, students
+    - 183 institutes, universities, laboratories from 42 countries
+    - 80+ nationalities
+
+## Data collection
+
+- Survey for quantitative analysis
+    - Distributed by e-mail to the whole collaboration via mailing list
+    - final count: **391** valid responses, ~10% of the collaboration
+- Interviews for qualitative analysis
+    - ~20 (including few from outside CMS)
+    - Only one who has never participated in outreach
+
+# Analysis
+
+## Survey data
+
+##
+
+```{r previous-participation, dev='svg'}
+quant_data %>%
+  select(previous_participation) %>%
+  ggplot() +
+  geom_bar(aes(previous_participation)) +
+  xlab(NULL) +
+  ylab(NULL) +
+  coord_flip() +
+  ggtitle("Have you ever participated in an outreach activity?")
+```
+
+##
+
+```{r duty-outreach, dev='svg', fig.cap='“I have a duty as a scientist to take part in outreach activities.”'}
+df_duty <- quant_data %>%
+  select(duty_outreach) %>%
+  mutate_if(is.integer, as.factor) %>%
+  mutate(duty_outreach = recode(duty_outreach,
+    "1" = "Strongly Disagree",
+    "2" = "Disagree",
+    "3" = "Neutral",
+    "4" = "Agree",
+    "5" = "Strongly Agree"
+  )) %>%
+  rename(
+    "“I have a duty as a scientist to 
+         take part in outreach activities.”" =
+      duty_outreach
+  )
+
+plot(likert::likert(df_duty,
+  grouping = quant_data$previous_participation
+),
+plot.percents = TRUE,
+text.size = 4
+)
+```
+
+##
+
+```{r non-specialists, dev='svg', fig.cap='“Non-specialists can participate in scientific research.”'}
+df_non_specialists <- quant_data %>%
+  select(non_specialists) %>%
+  mutate_if(is.integer, as.factor) %>%
+  mutate(non_specialists = recode(non_specialists,
+    "1" = "Strongly Disagree",
+    "2" = "Disagree",
+    "3" = "Neutral",
+    "4" = "Agree",
+    "5" = "Strongly Agree"
+  )) %>%
+  rename(
+    "“Non-specialists can participate in scientific research.”" =
+      non_specialists
+  )
+
+plot(likert::likert(df_non_specialists,
+  grouping = quant_data$previous_participation
+),
+plot.percents = TRUE,
+text.size = 4
+)
+```
+
+## Interview data
+
+## Participation
+
+##
+
+"How can members of wider society could participate or have a say in particle physics research in some form?"
+
+##
+
+> "Now that’s difficult, that’s a difficult question. I would have to define what you mean by 'have a say'."
+
+##
+
+> "[W]e need people to install the software that are then used by different computing facilities to run part of the simulations or the processing. [I]t gives them a chance to do a little something and to participate in and to have the feeling that they contribute."
+
+##
+
+> "I don’t think they should have a say in particle physics research. […] I think it’s useful to explain to people what we do and why we do it; I don’t think we should justify to people what we do, how we do it or let non-physicists try to direct the areas of research."
+
+##
+
+> "I think when you do the outreach events, you could and should listen to the comments you receive. […] Usually they are very positive [b]ut on the other hand you also have to listen to sceptical people that say, 'Do you know what you are doing there if you go down [underground]? How do you know you do not compromise the health of other people with radiation or whatever?' Then you have to prepare well and take it serious."
+
+##
+
+> "I do not quite see the public as an active partner now. […] I think it is reasonable to invest part of our time in undergraduate students even though undergraduate students might not end up in this field but the whole notion of having complete lay people with no knowledge contributing, I don’t think that’s reasonable."
+
+## The relevance of research
+
+##
+
+> "Cultures of disciplines may influence cultures of outreach."
+
+<small>&mdash; Johnson _et al._ (2014)</small>
+
+##
+
+> "physicists and astronomers were more likely to say they prioritize communication designed to excite public audiences"
+
+<small>&mdash; Dudo & Besley (2016)</small>
+
+##
+
+> "[…] the most important thing in public communication is to be relevant […]"
+
+> "Relevance as an important feature of communication was an almost universal point of discussion in the data […]"
+
+<small>&mdash; Davies (2008)</small>
+
+##
+
+"Do you think particle physics is relevant to people’s lives?"
+
+##
+
+> "Yes and no.  Not everyday life but just, it’s something… it belongs to humanity in general. I mean it’s something that makes us richer, I mean society in general but I don’t think it impacts everyday life. I think also people could live without particle physics but it’s a bit like art. We can live without but we are a better society if we live with."
+
+##
+
+> "[…] in a trivial way because of the applications first, because there are as you know many medical applications of accelerators."
+
+##
+
+> "Not really. No, I don’t think it is particularly as a discipline. As an inspiration its relevant the same way as a quasar is relevant.  The same way as going to Mars is. Well that’s slightly relevant. […] I think if you want to make direct links one can talk about how particles are used in various ways like X-rays or radioactivity in medicine but it's again not, you don’t particularly need to do particle physics for most of that, it’s more applied physics or whatever."
+
+##
+
+> "Creating knowledge is really one the fundamental pillars of human culture which distinguishes us. I think science should not be shy of saying this. And in that sense doing science is relevant for mankind because we are making sure that this pillar continues to stay. […] The other part of course is the fact that science and particle physics has an impact sooner or later. Sometimes you don’t and sometimes you see it immediately."
+
+# Part 3: The proposition
+
+## Ask ourselves…
+
+## 
+
+- How **direct** is the relevance of the research to everyday human life?
+    - Does it concern humans directly? e.g. health / medicine
+    - Is it closely but not directly related to human life? e.g. genetics / biotechnology
+    - Does it affect human beings on a day-to-day basis at all? e.g. cosmology
+
+##
+
+- How **immediate** is the relevance of the research to everyday human life?
+    - Does it affect us right away? e.g. climate change
+    - Does it affect us in the short-to-medium term? e.g. GMO
+    - Does it affect us in the very long term? e.g. many areas of basic research
+
+## Relevance-distance…
+
+## 
+
+as a model for evaluating the potential for (upstream) engagement for different fields of scientific research.
+
+##
+
+```{r relevance-distance, dev='svg', fig.cap='Purely illustrative -- not based on data'}
+field <- c(
+  "Medicine", "Climate change", "GMO",
+  "Nanotechnology", "Particle physics", "CRISPR",
+  "Graphene", "Exoplanets"
+)
+rel_dir <- as_factor(c(
+  "1", "1", "2",
+  "3", "5", "2",
+  "4", "1"
+))
+rel_imm <- as_factor(c(
+  "1", "2", "1",
+  "4", "5", "3",
+  "1", "5"
+))
+reldis <- as.tibble(data.frame(field, rel_dir, rel_imm))
+
+reldis %>%
+  ggplot(aes(x = rel_dir, y = rel_imm)) +
+  geom_point(size = 2) +
+  geom_text_repel(aes(label = field), point.padding = 2) +
+  geom_vline(xintercept = 3, alpha = 0.3) +
+  geom_hline(yintercept = 3, alpha = 0.3) +
+  geom_abline(intercept = 6, slope = -1, alpha = 0.1) +
+  scale_x_discrete("Directness of relevance",
+    labels = c(
+      "1" = "1\nMost direct",
+      "2" = "2", "3" = "3", "4" = "4",
+      "5" = "5\nLeast direct"
+    ),
+    limits = c(1:5)
+  ) +
+  scale_y_discrete("Immediacy of relevance",
+    labels = c(
+      "1" = "1\nShort term",
+      "2" = "2", "3" = "3", "4" = "4",
+      "5" = "5\nLong term"
+    ),
+    limits = c(1:5)
+  )
+```
+
+# Conclusions
+
+##
+
+1. Participatory paradigms of science communication are driven by research into a small number of sciences.
+1. Sciences such as particle physics have limited scope for participatory paradigms.
+1. We should "unlump" sciences and tailor participation expectations to the relevance of the science to everyday human life.
+
+# Acknowledgements
+
+## Supervision
+
+> - Dr. Emma Weitkamp, UWE Bristol
+> - Dr. Clare Wilkinson, UWE Bristol
+> - Dr. Erik Stengler, UWE Bristol
+> - Dr. Christine Sutton, CERN
+
+## Financial and other support
+
+> - The CMS Collaboration, CERN
+> - The CERN Education, Communications and Outreach (ECO) Group
+> - The Science Communication Unit, UWE Bristol
+
+# Misc.
+
+## 
+
+```{r pus-word, dev='svg'}
+pus_word <- pus_data %>%
+  unnest_tokens(word, title) %>%
+  anti_join(stop_words) %>%
+  count(word, sort = T) %>%
+  filter(n > 20) %>%
+  mutate(word = reorder(word, n)) %>%
+  mutate(highlight = ifelse(word %in% highlight_word, "yes", "no"))
+
+pus_word %>%
+  ggplot(aes(word, n, fill = highlight)) +
+  geom_col() +
+  scale_fill_manual(
+    values = c("yes" = "blue", "no" = "grey"),
+    guide = FALSE
+  ) +
+  ggtitle("Public Communication of Science", subtitle = "word") +
+  theme(
+    axis.text.y =
+      element_text(
+        colour =
+          ifelse(levels(pus_word$word) %in% highlight_word,
+            "blue", "grey"
+          )
+      )
+  ) +
+  xlab(NULL) +
+  ylab("Number of occurances (> 20)") +
+  coord_flip()
+```
+
+##
+
+```{r scx-word, dev='svg'}
+scx_word <- scx_data %>%
+  unnest_tokens(word, title) %>%
+  anti_join(stop_words) %>%
+  count(word, sort = T) %>%
+  filter(n > 15) %>%
+  mutate(word = reorder(word, n)) %>%
+  mutate(highlight = ifelse(word %in% highlight_word, "yes", "no"))
+
+scx_word %>%
+  ggplot(aes(word, n, fill = highlight)) +
+  geom_col() +
+  scale_fill_manual(values = c("yes" = "blue", "no" = "grey"), guide = FALSE) +
+  ggtitle("Science Communication", subtitle = "word") +
+  theme(
+    axis.text.y =
+      element_text(
+        colour =
+          ifelse(levels(scx_word$word) %in% highlight_word,
+            "blue", "grey"
+          )
+      )
+  ) +
+  xlab(NULL) +
+  ylab("Number of occurances (> 15)") +
+  coord_flip()
+```
+
+##
+
+```{r scx-bigram, dev='svg'}
+scx_bigram <- scx_data %>%
+  unnest_tokens(bigram, title, token = "ngrams", n = 2) %>%
+  separate(bigram, c("word1", "word2"), sep = " ") %>%
+  filter(!word1 %in% stop_words$word) %>%
+  filter(!word2 %in% stop_words$word) %>%
+  unite(bigram, word1, word2, sep = " ") %>%
+  count(bigram, sort = T) %>%
+  filter(n > 2) %>%
+  mutate(bigram = reorder(bigram, n)) %>%
+  mutate(highlight = ifelse(bigram %in% highlight_bigram, "yes", "no"))
+
+scx_bigram %>%
+  ggplot(aes(bigram, n, fill = highlight)) +
+  geom_col() +
+  scale_fill_manual(
+    values = c("yes" = "blue", "no" = "grey"),
+    guide = FALSE
+  ) +
+  ggtitle("Science Communication", subtitle = "bigrams") +
+  theme(
+    axis.text.y =
+      element_text(
+        colour =
+          ifelse(levels(scx_bigram$bigram)
+          %in% highlight_bigram,
+          "blue", "grey"
+          )
+      )
+  ) +
+  xlab(NULL) +
+  ylab("Number of occurances (> 2)") +
+  coord_flip()
+```
