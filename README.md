@@ -51,7 +51,7 @@ knitr takes the `index.Rmd` (R Markdown) file and through some wizardry produces
 1. Using Binder -- simplest solution
 
     Click on the "launch binder" button at the top to open RStudio in your browser and interact with the raw files.
-    Start with `index.html`.
+    Start with `index.Rmd`.
 
 1. Using Docker -- intermediate solution
 
